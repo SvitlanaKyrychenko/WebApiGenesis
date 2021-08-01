@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>registration</title>
+</head>
+<body>
+<h2>Registration</h2>
+<p style="color: red">{{ .Message}}</p>
+<form method="GET">
+    <label>Email</label><br>
+    <input type="text" name="email" /><br><br>
+    <label>Password</label><br>
+    <input type="password" name="password" /><br><br>
+    <label>Confirm password</label><br>
+    <input type="password" name="confirmPassword" /><br><br>
+    <input type="submit" name="signUp" value="Sign up" />
+</form>
+<form method="GET">
+    <input type="submit" name="goToSignIn" value="Go to sign in" />
+</form>
+</body>
+</html>
