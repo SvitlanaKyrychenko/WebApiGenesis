@@ -24,14 +24,9 @@ func BitCoinToUAHRate(btsResource string) (float64, error) {
 	if err != nil {
 		return -1, err
 	}
-	r.Header.Set("Accept", "application/json")
-	if err != nil {
-		return -1, err
-	}
 	var data BTS
 	if err2 := json.NewDecoder(r.Body).Decode(&data); err2 != nil {
 		return 0, err2
 	}
-	fmt.Println(data.Ticker.Price)
 	return data.Ticker.Price, nil
 }

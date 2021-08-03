@@ -21,5 +21,5 @@ func Authenticate(authenticationUser AuthenticationUser) (bool, string) {
 			}
 		}
 	}
-	return false, "email or password are wrong"
+	return false, "Email or password are wrong. "
 }
