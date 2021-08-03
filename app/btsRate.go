@@ -12,6 +12,13 @@ type BTS struct {
 	} `json:"ticker"`
 }
 
+
+func BTSRateHandler(response http.ResponseWriter, request *http.Request) {
+	if btsRate, err := BitCoinToUAHRate("https://api.cryptonator.com/api/ticker/btc-uah"); err == nil {
+		fmt.Fprintf(response, "BTS: 1\nUAH: " + fmt.Sprintf("%.2f", btsRate))
+	}
+}
+
 func BitCoinToUAHRate(btsResource string) (float64, error) {
 	r, err := http.Get(btsResource)
 	if err != nil {
