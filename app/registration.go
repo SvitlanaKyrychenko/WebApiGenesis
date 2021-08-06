@@ -10,32 +10,47 @@ import (
 )
 
 func RegistrationHandler(response http.ResponseWriter, request *http.Request) {
-	var viewData ViewData = ViewData{""}
-	var registrationUser RegistrationUser
-	if request.Method == "GET" {
-		err := request.ParseForm()
-		if err != nil {
-			log.Println(err)
-		}
-		registrationUser.Email = request.FormValue("email")
-		registrationUser.Password = request.FormValue("password")
-		registrationUser.ConfirmPassword = request.FormValue("confirmPassword")
-		goToSignIn := request.FormValue("Go to sign in")
-		signUp := request.FormValue("signUp")
 
-		if signUp == "Sign up" {
-			if valid, message := trySignUp(registrationUser); !valid{
-				viewData = ViewData{message}
-			}else {
-				http.Redirect(response, request, "/user/login", 301)
-			}
-		} else if goToSignIn == "Go to sign in" {
-			http.ServeFile(response, request, "../WebApiGenesis/html/authentication.html")
-			return
-		}
-		tmpl, _ := template.ParseFiles("../WebApiGenesis/html/registration.html")
-		tmpl.Execute(response, viewData)
+	if request.Method == "POST" {
+		postRegistrationLogic(response, request)
 	}
+	if request.Method == "GET" {
+		tmpl, _ := template.ParseFiles("../WebApiGenesis/html/registration.html")
+		tmpl.Execute(response,  ViewData{""})
+	}
+}
+
+func postRegistrationLogic(response http.ResponseWriter, request *http.Request)  {
+	err := request.ParseForm()
+	if err != nil {
+		log.Println(err)
+	}
+	if request.FormValue("signUp") == "Sign up" {
+		singUpLogic(response, request)
+	} else if request.FormValue("goToSignIn") == "Go to sign in" {
+		http.ServeFile(response, request, "../WebApiGenesis/html/authentication.html")
+		return
+	}
+}
+
+func singUpLogic(response http.ResponseWriter, request *http.Request)  {
+	var viewData ViewData = ViewData{""}
+	var registrationUser RegistrationUser = createRegistrationUser(request)
+	if valid, message := trySignUp(registrationUser); !valid {
+		viewData = ViewData{message}
+	} else {
+		http.Redirect(response, request, "/user/login", 301)
+	}
+	tmpl, _ := template.ParseFiles("../WebApiGenesis/html/registration.html")
+	tmpl.Execute(response, viewData)
+}
+
+func createRegistrationUser(request *http.Request) RegistrationUser {
+	var registrationUser RegistrationUser
+	registrationUser.Email = request.FormValue("email")
+	registrationUser.Password = request.FormValue("password")
+	registrationUser.ConfirmPassword = request.FormValue("confirmPassword")
+	return registrationUser
 }
 
 func trySignUp(registrationUser RegistrationUser) (bool, string) {

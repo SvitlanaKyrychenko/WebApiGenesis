@@ -5,6 +5,7 @@ import (
 	. "WebApiGenesis/model"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Authenticate(authenticationUser AuthenticationUser) (bool, string) {
@@ -16,7 +17,7 @@ func Authenticate(authenticationUser AuthenticationUser) (bool, string) {
 			if err1 := json.Unmarshal(user, &userGot); err1 != nil {
 				fmt.Println(err1)
 			} else if userGot.Email == authenticationUser.Email &&
-				userGot.Password == authenticationUser.Password {
+				bcrypt.CompareHashAndPassword([]byte(userGot.Password), []byte(authenticationUser.Password)) == nil {
 				return true, ""
 			}
 		}

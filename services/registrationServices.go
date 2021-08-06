@@ -8,18 +8,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Registration(registrationUser RegistrationUser) bool  {
+func Registration(registrationUser RegistrationUser) bool {
 	guid, e := ksuid.NewRandom()
 	if e != nil {
 		fmt.Println(e)
 	}
 	hashedPassword, errHash := bcrypt.GenerateFromPassword([]byte(registrationUser.Password), bcrypt.DefaultCost)
-	if errHash == nil{
+	if errHash == nil {
 		var newUser DBUser = DBUser{Guid: guid, Password: string(hashedPassword), Email: registrationUser.Email}
-		valid := AddOrUpdateAsync(newUser)
-		if valid {
-			return true
-		}
+		return AddOrUpdateAsync(newUser)
 	}
 	return false
 }
