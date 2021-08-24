@@ -1,8 +1,9 @@
 package app
 
 import (
-	. "WebApiGenesis/model"
-	. "WebApiGenesis/services"
+	"WebApiGenesis/model"
+	"WebApiGenesis/services"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -36,31 +37,27 @@ func postAuthenticationLogic(response http.ResponseWriter, request *http.Request
 }
 
 func signInLogic(response http.ResponseWriter, request *http.Request) {
-	var viewData ViewData = ViewData{""}
-	var authenticationUser AuthenticationUser = createAuthenticationUser(request)
-	if valid, message := singIn(authenticationUser); !valid {
-		viewData.Message += message.Message
-	} else {
+	var convertor model.Convertor = model.JSONGConvertor{}
+	var authService services.Authenticator = services.Authentication{Convertor: convertor}
+	var authenticationUser model.AuthenticationUser = createAuthenticationUser(request)
+	message, err := authService.Authenticate(authenticationUser)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	var viewData ViewData = ViewData{message}
+	if viewData.Message == "" {
 		http.Redirect(response, request, "/btsRate", 301)
 	}
 	tmpl, _ := template.ParseFiles("../WebApiGenesis/html/authentication.html")
 	tmpl.Execute(response, viewData)
 }
 
-func createAuthenticationUser(request *http.Request) AuthenticationUser {
-	var authenticationUser AuthenticationUser
+func createAuthenticationUser(request *http.Request) model.AuthenticationUser {
+	var authenticationUser model.AuthenticationUser
 	authenticationUser.Password = request.FormValue("password")
 	authenticationUser.Email = request.FormValue("email")
 	return authenticationUser
 }
 
-func singIn(authenticationUser AuthenticationUser) (bool, ViewData) {
-	var viewData ViewData = ViewData{""}
-	if authenticationUser.Email == "" || authenticationUser.Password == "" {
-		viewData.Message += "Password and email must ve set. "
-	}
-	if valid, message := Authenticate(authenticationUser); !valid {
-		viewData.Message += message
-	}
-	return viewData.Message == "", viewData
-}
+
