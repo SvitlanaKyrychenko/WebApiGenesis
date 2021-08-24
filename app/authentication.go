@@ -13,9 +13,13 @@ type ViewData struct {
 	Message string
 }
 
-func AuthenticationHandler(response http.ResponseWriter, request *http.Request) {
+type Authentication struct {
+	AuthService services.Authenticator
+}
+
+func (auth Authentication) AuthenticationHandler(response http.ResponseWriter, request *http.Request) {
 	if request.Method == "POST" {
-		postAuthenticationLogic(response, request)
+		postAuthenticationLogic(response, request, auth)
 	}
 	if request.Method == "GET" {
 		tmpl, _ := template.ParseFiles("../WebApiGenesis/html/authentication.html")
@@ -23,24 +27,22 @@ func AuthenticationHandler(response http.ResponseWriter, request *http.Request) 
 	}
 }
 
-func postAuthenticationLogic(response http.ResponseWriter, request *http.Request) {
+func postAuthenticationLogic(response http.ResponseWriter, request *http.Request, auth Authentication) {
 	err := request.ParseForm()
 	if err != nil {
 		log.Println(err)
 	}
 	if request.FormValue("signIn") == "Sign in" {
-		signInLogic(response, request)
+		signInLogic(response, request, auth)
 	}
 	if request.FormValue("signUp") == "Sign up" {
 		http.Redirect(response, request, "/user/create", 301)
 	}
 }
 
-func signInLogic(response http.ResponseWriter, request *http.Request) {
-	var convertor model.Convertor = model.JSONGConvertor{}
-	var authService services.Authenticator = services.Authentication{Convertor: convertor}
+func signInLogic(response http.ResponseWriter, request *http.Request, auth Authentication) {
 	var authenticationUser model.AuthenticationUser = createAuthenticationUser(request)
-	message, err := authService.Authenticate(authenticationUser)
+	message, err := auth.AuthService.Authenticate(authenticationUser)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -59,5 +61,3 @@ func createAuthenticationUser(request *http.Request) model.AuthenticationUser {
 	authenticationUser.Email = request.FormValue("email")
 	return authenticationUser
 }
-
-

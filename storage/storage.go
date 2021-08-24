@@ -3,6 +3,7 @@ package storage
 import (
 	"WebApiGenesis/model"
 	"WebApiGenesis/utils/file"
+	"errors"
 	"fmt"
 	"github.com/segmentio/ksuid"
 	"io/ioutil"
@@ -21,18 +22,27 @@ type Storage interface {
 }
 
 func (storage FileStorage) AddOrUpdateAsync(obj model.FileStorable) error {
+	if obj == nil {
+		return errors.New("can not operate with nil object")
+	}
 	errorChan := make(chan error)
 	go func() {
+		if storage.Convertor == nil {
+			errorChan <- errors.New("converter has not set")
+			return
+		}
 		resJSON, err := storage.Convertor.ConvertByte(obj)
 		if err != nil {
 			errorChan <- err
 			return
 		}
-		dir, err := getDir(obj)
+		dir, err := GetDir(obj)
 		if err != nil {
 			errorChan <- err
 			return
 		}
+		file.CreateIfNotExistDir(dir)
+
 		file, err := os.Create(filepath.Join(dir, obj.GetGuid().String()))
 		if err != nil {
 			fmt.Println("Unable to create file:", err)
@@ -46,6 +56,9 @@ func (storage FileStorage) AddOrUpdateAsync(obj model.FileStorable) error {
 }
 
 func (FileStorage) GetAsync(obj model.FileStorable) ([]byte, error) {
+	if obj == nil {
+		return nil, errors.New("can not operate with nil object")
+	}
 	class := make(chan []byte)
 	var err error
 	go func() {
@@ -61,7 +74,7 @@ func (FileStorage) GetAsync(obj model.FileStorable) ([]byte, error) {
 }
 
 func getFilePath(obj model.FileStorable) (string, error) {
-	dir, err := getDir(obj)
+	dir, err := GetDir(obj)
 	if err != nil {
 		return "", err
 	}
@@ -74,6 +87,9 @@ func getFilePath(obj model.FileStorable) (string, error) {
 }
 
 func (FileStorage) GetALLAsync(obj model.FileStorable) (map[ksuid.KSUID][]byte, error) {
+	if obj == nil {
+		return nil, errors.New("can not operate with nil object")
+	}
 	classes := make(chan map[ksuid.KSUID][]byte)
 	var err error
 	go func() {
@@ -120,7 +136,7 @@ func createGuidFromFile(file os.FileInfo) (ksuid.KSUID, error) {
 }
 
 func getDirFiles(obj model.FileStorable) ([]os.FileInfo, error) {
-	dir, err := getDir(obj)
+	dir, err := GetDir(obj)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +151,7 @@ func getDirFiles(obj model.FileStorable) ([]os.FileInfo, error) {
 	return files, err
 }
 
-func getDir(obj model.FileStorable) (string, error) {
+func GetDir(obj model.FileStorable) (string, error) {
 	userConfigDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err

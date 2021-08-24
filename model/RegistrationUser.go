@@ -1,7 +1,7 @@
 package model
 
-type RegistrationUser struct{
-	Password string
+type RegistrationUser struct {
+	Email           string
+	Password        string
 	ConfirmPassword string
-	Email string
 }

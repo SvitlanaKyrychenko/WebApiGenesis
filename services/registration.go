@@ -4,6 +4,7 @@ import (
 	"WebApiGenesis/model"
 	"WebApiGenesis/storage"
 	"encoding/json"
+	"errors"
 	"github.com/segmentio/ksuid"
 	"golang.org/x/crypto/bcrypt"
 	"log"
@@ -15,7 +16,7 @@ type Registrar interface {
 }
 
 type Registration struct {
-	Convertor model.Convertor
+	Storage storage.Storage
 }
 
 func (registration Registration) Register(registrationUser model.RegistrationUser) (string, error) {
@@ -46,12 +47,14 @@ func validEmail(email string) bool {
 	return err != nil
 }
 func (registration Registration) saveInStorage(registrationUser model.RegistrationUser) error {
-	var storage storage.Storage = storage.FileStorage{Convertor: registration.Convertor}
 	newDBUser, err := createDBUser(registrationUser)
 	if err != nil {
 		return err
 	}
-	return storage.AddOrUpdateAsync(newDBUser)
+	if registration.Storage == nil {
+		return errors.New("storage has not set")
+	}
+	return registration.Storage.AddOrUpdateAsync(newDBUser)
 }
 
 func createDBUser(registrationUser model.RegistrationUser) (model.DBUser, error) {
@@ -69,8 +72,10 @@ func createDBUser(registrationUser model.RegistrationUser) (model.DBUser, error)
 }
 
 func checkRegistrationUserInStorage(registration Registration, registrationUser model.RegistrationUser) bool {
-	var storage storage.Storage = storage.FileStorage{Convertor: registration.Convertor}
-	users, err := storage.GetALLAsync(model.DBUser{})
+	if registration.Storage == nil {
+		return false
+	}
+	users, err := registration.Storage.GetALLAsync(model.DBUser{})
 	if err != nil {
 		log.Println(err)
 	}

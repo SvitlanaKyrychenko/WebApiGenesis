@@ -4,6 +4,7 @@ import (
 	"WebApiGenesis/model"
 	"WebApiGenesis/storage"
 	"encoding/json"
+	"errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -12,7 +13,7 @@ type Authenticator interface {
 }
 
 type Authentication struct {
-	Convertor model.Convertor
+	Storage storage.Storage
 }
 
 func (authentication Authentication) Authenticate(authenticationUser model.AuthenticationUser) (string, error) {
@@ -29,8 +30,10 @@ func (authentication Authentication) Authenticate(authenticationUser model.Authe
 }
 
 func checkAuthenticationUserInStorage(authentication Authentication, authenticationUser model.AuthenticationUser) (string, error) {
-	var storage storage.Storage = storage.FileStorage{Convertor: authentication.Convertor}
-	users, err := storage.GetALLAsync(model.DBUser{})
+	if authentication.Storage == nil {
+		return "", errors.New("storage has not set")
+	}
+	users, err := authentication.Storage.GetALLAsync(model.DBUser{})
 	if err != nil {
 		return "", err
 	}

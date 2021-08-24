@@ -1,6 +1,6 @@
 package model
 
-type AuthenticationUser struct{
+type AuthenticationUser struct {
+	Email    string
 	Password string
-	Email string
 }

@@ -9,7 +9,6 @@ type Convertor interface {
 	ToUAH(btsResource string) (float64, error)
 }
 
-
 type BTS struct {
 	Ticker struct {
 		Price float64 `json:"price,string"`
@@ -25,8 +24,8 @@ func (Conversion) ToUAH(btsResource string) (float64, error) {
 		return -1, err
 	}
 	var data BTS
-	if err2 := json.NewDecoder(r.Body).Decode(&data); err2 != nil {
-		return 0, err2
+	if err = json.NewDecoder(r.Body).Decode(&data); err != nil {
+		return -1, err
 	}
 	return data.Ticker.Price, nil
 }

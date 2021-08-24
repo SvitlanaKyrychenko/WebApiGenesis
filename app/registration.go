@@ -8,9 +8,13 @@ import (
 	"net/http"
 )
 
-func RegistrationHandler(response http.ResponseWriter, request *http.Request) {
+type Registration struct {
+	RegService services.Registrar
+}
+
+func (reg Registration) RegistrationHandler(response http.ResponseWriter, request *http.Request) {
 	if request.Method == "POST" {
-		postRegistrationLogic(response, request)
+		postRegistrationLogic(response, request, reg)
 	}
 	if request.Method == "GET" {
 		tmpl, _ := template.ParseFiles("../WebApiGenesis/html/registration.html")
@@ -18,23 +22,21 @@ func RegistrationHandler(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func postRegistrationLogic(response http.ResponseWriter, request *http.Request) {
+func postRegistrationLogic(response http.ResponseWriter, request *http.Request, reg Registration) {
 	err := request.ParseForm()
 	if err != nil {
 		log.Println(err)
 	}
 	if request.FormValue("signUp") == "Sign up" {
-		singUpLogic(response, request)
+		singUpLogic(response, request, reg)
 	} else if request.FormValue("goToSignIn") == "Go to sign in" {
 		http.Redirect(response, request, "/user/login", 301)
 	}
 }
 
-func singUpLogic(response http.ResponseWriter, request *http.Request) {
-	var convertor model.Convertor = model.JSONGConvertor{}
-	var regService services.Registrar = services.Registration{Convertor: convertor}
+func singUpLogic(response http.ResponseWriter, request *http.Request, reg Registration) {
 	var registrationUser model.RegistrationUser = createRegistrationUser(request)
-	message, err := regService.Register(registrationUser)
+	message, err := reg.RegService.Register(registrationUser)
 	if err != nil {
 		log.Println(err)
 		return
