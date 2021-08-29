@@ -11,17 +11,17 @@ import (
 	"path/filepath"
 )
 
+type Storage interface {
+	AddOrUpdateAsync(obj model.Storable) error
+	GetAsync(obj model.Storable) ([]byte, error)
+	GetALLAsync(obj model.Storable) (map[ksuid.KSUID][]byte, error)
+}
+
 type FileStorage struct {
 	Convertor model.Convertor
 }
 
-type Storage interface {
-	AddOrUpdateAsync(obj model.FileStorable) error
-	GetAsync(obj model.FileStorable) ([]byte, error)
-	GetALLAsync(obj model.FileStorable) (map[ksuid.KSUID][]byte, error)
-}
-
-func (storage FileStorage) AddOrUpdateAsync(obj model.FileStorable) error {
+func (storage FileStorage) AddOrUpdateAsync(obj model.Storable) error {
 	if obj == nil {
 		return errors.New("can not operate with nil object")
 	}
@@ -55,7 +55,7 @@ func (storage FileStorage) AddOrUpdateAsync(obj model.FileStorable) error {
 	return <-errorChan
 }
 
-func (FileStorage) GetAsync(obj model.FileStorable) ([]byte, error) {
+func (FileStorage) GetAsync(obj model.Storable) ([]byte, error) {
 	if obj == nil {
 		return nil, errors.New("can not operate with nil object")
 	}
@@ -73,7 +73,7 @@ func (FileStorage) GetAsync(obj model.FileStorable) ([]byte, error) {
 	return <-class, err
 }
 
-func getFilePath(obj model.FileStorable) (string, error) {
+func getFilePath(obj model.Storable) (string, error) {
 	dir, err := GetDir(obj)
 	if err != nil {
 		return "", err
@@ -86,7 +86,7 @@ func getFilePath(obj model.FileStorable) (string, error) {
 	return filePath, nil
 }
 
-func (FileStorage) GetALLAsync(obj model.FileStorable) (map[ksuid.KSUID][]byte, error) {
+func (FileStorage) GetALLAsync(obj model.Storable) (map[ksuid.KSUID][]byte, error) {
 	if obj == nil {
 		return nil, errors.New("can not operate with nil object")
 	}
@@ -100,7 +100,7 @@ func (FileStorage) GetALLAsync(obj model.FileStorable) (map[ksuid.KSUID][]byte, 
 	return <-classes, err
 }
 
-func getClassesFromFiles(obj model.FileStorable) (map[ksuid.KSUID][]byte, error) {
+func getClassesFromFiles(obj model.Storable) (map[ksuid.KSUID][]byte, error) {
 	classes := make(map[ksuid.KSUID][]byte)
 	files, err := getDirFiles(obj)
 	if err != nil {
@@ -119,7 +119,7 @@ func getClassesFromFiles(obj model.FileStorable) (map[ksuid.KSUID][]byte, error)
 	return classes, nil
 }
 
-func getClassFromFile(obj model.FileStorable, guid ksuid.KSUID) ([]byte, error) {
+func getClassFromFile(obj model.Storable, guid ksuid.KSUID) ([]byte, error) {
 	var class model.ClassStorable = model.ClassStorable{Guid: guid, NameClass: obj.Name()}
 	var storage FileStorage
 	currentClass, err := storage.GetAsync(class)
@@ -135,7 +135,7 @@ func createGuidFromFile(file os.FileInfo) (ksuid.KSUID, error) {
 	return guid, err
 }
 
-func getDirFiles(obj model.FileStorable) ([]os.FileInfo, error) {
+func getDirFiles(obj model.Storable) ([]os.FileInfo, error) {
 	dir, err := GetDir(obj)
 	if err != nil {
 		return nil, err
@@ -151,7 +151,7 @@ func getDirFiles(obj model.FileStorable) ([]os.FileInfo, error) {
 	return files, err
 }
 
-func GetDir(obj model.FileStorable) (string, error) {
+func GetDir(obj model.Storable) (string, error) {
 	userConfigDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err

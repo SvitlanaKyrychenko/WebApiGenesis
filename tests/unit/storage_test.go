@@ -14,7 +14,7 @@ import (
 
 func TestValidStorageAdd(t *testing.T) {
 	//Arrange
-	var mockClass model.FileStorable = util.PrepareMockClass("class")
+	var mockClass model.Storable = util.PrepareMockClass("class")
 	var fileStorage storage.Storage = util.PrepareStorage()
 	defer util.DeleteClass(mockClass)
 	//Act
@@ -28,7 +28,7 @@ func TestValidStorageAdd(t *testing.T) {
 
 func TestValidStorageAddAndThenGet(t *testing.T) {
 	//Arrange
-	var mockClass model.FileStorable = util.PrepareMockClass("class")
+	var mockClass model.Storable = util.PrepareMockClass("class")
 	var fileStorage storage.Storage = util.PrepareStorage()
 	defer util.DeleteClass(mockClass)
 	//Act
@@ -45,8 +45,8 @@ func TestValidStorageAddAndThenGet(t *testing.T) {
 
 func TestValidStorageAddAndThenGetAll(t *testing.T) {
 	//Arrange
-	var mockClass model.FileStorable = util.PrepareMockClass("class")
-	var mockClass2 model.FileStorable = util.PrepareMockClass("class2")
+	var mockClass model.Storable = util.PrepareMockClass("class")
+	var mockClass2 model.Storable = util.PrepareMockClass("class2")
 	var fileStorage storage.Storage = util.PrepareStorage()
 	defer util.DeleteClass(mockClass)
 	defer util.DeleteClass(mockClass2)
@@ -55,7 +55,7 @@ func TestValidStorageAddAndThenGetAll(t *testing.T) {
 	errAddOrUpdate2 := fileStorage.AddOrUpdateAsync(mockClass2)
 	byteClasses, errGetAll := fileStorage.GetALLAsync(mockClass)
 	var errUnmarshal error
-	classes := make(map[ksuid.KSUID]model.FileStorable)
+	classes := make(map[ksuid.KSUID]model.Storable)
 	for _, byteClass := range byteClasses {
 		var classGot mock.StorableClass
 		errUnmarshal = json.Unmarshal(byteClass, &classGot)

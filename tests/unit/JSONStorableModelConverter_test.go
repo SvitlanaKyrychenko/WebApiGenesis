@@ -11,7 +11,7 @@ import (
 func TestValidStorableModelJSONConverter(t *testing.T) {
 	//Arrange
 	var convertor model.Convertor = model.JSONGConvertor{}
-	var mockClass model.FileStorable = prepareMockClass("class")
+	var mockClass model.Storable = prepareMockClass("class")
 	//Act
 	classByte, errConvert := convertor.ConvertByte(mockClass)
 	var classGot mock.StorableClass

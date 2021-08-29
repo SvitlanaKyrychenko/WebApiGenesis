@@ -2,7 +2,7 @@ package model
 
 import "github.com/segmentio/ksuid"
 
-type FileStorable interface {
+type Storable interface {
 	GetGuid() ksuid.KSUID
 	Name() string
 }

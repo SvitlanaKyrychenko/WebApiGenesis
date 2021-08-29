@@ -16,7 +16,7 @@ func PrepareStorage() storage.Storage {
 	return storage.FileStorage{Convertor: convertor}
 }
 
-func PrepareMockClass(message string) model.FileStorable {
+func PrepareMockClass(message string) model.Storable {
 	guid, err := ksuid.NewRandom()
 	if err != nil {
 		return nil
@@ -24,7 +24,7 @@ func PrepareMockClass(message string) model.FileStorable {
 	return mock.StorableClass{Guid: guid, Message: message}
 }
 
-func DeleteClass(class model.FileStorable) {
+func DeleteClass(class model.Storable) {
 	src, err := GetClassPath(class)
 	if err == nil {
 		file.DeleteFile(src)
@@ -49,7 +49,7 @@ func DeleteDBUser(registrationUser model.RegistrationUser, storage storage.Stora
 	}
 }
 
-func GetClassPath(class model.FileStorable) (string, error) {
+func GetClassPath(class model.Storable) (string, error) {
 	src, err := storage.GetDir(class)
 	if err == nil {
 		return filepath.Join(src, class.GetGuid().String()), nil

@@ -20,7 +20,7 @@ func (storage *Storage) Init() {
 	storage.virtualStorage.storage = make(map[ksuid.KSUID][]byte)
 }
 
-func (storage Storage) AddOrUpdateAsync(obj model.FileStorable) error {
+func (storage Storage) AddOrUpdateAsync(obj model.Storable) error {
 	class, err := storage.Convertor.ConvertByte(obj)
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func (storage Storage) AddOrUpdateAsync(obj model.FileStorable) error {
 	return nil
 }
 
-func (storage Storage) GetAsync(obj model.FileStorable) ([]byte, error) {
+func (storage Storage) GetAsync(obj model.Storable) ([]byte, error) {
 	storage.virtualStorage.m.Lock()
 	class, contains := storage.virtualStorage.storage[obj.GetGuid()]
 	storage.virtualStorage.m.Unlock()
@@ -41,7 +41,7 @@ func (storage Storage) GetAsync(obj model.FileStorable) ([]byte, error) {
 	return nil, nil
 }
 
-func (storage Storage) GetALLAsync(obj model.FileStorable) (map[ksuid.KSUID][]byte, error) {
+func (storage Storage) GetALLAsync(obj model.Storable) (map[ksuid.KSUID][]byte, error) {
 	result := make(map[ksuid.KSUID][]byte)
 	storage.virtualStorage.m.Lock()
 	result = storage.virtualStorage.storage
@@ -49,7 +49,7 @@ func (storage Storage) GetALLAsync(obj model.FileStorable) (map[ksuid.KSUID][]by
 	return result, nil
 }
 
-func (storage Storage) Contains(obj model.FileStorable) bool {
+func (storage Storage) Contains(obj model.Storable) bool {
 	storage.virtualStorage.m.Lock()
 	_, contains := storage.virtualStorage.storage[obj.GetGuid()]
 	storage.virtualStorage.m.Unlock()
