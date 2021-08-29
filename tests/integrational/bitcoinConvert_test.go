@@ -6,24 +6,13 @@ import (
 	"testing"
 )
 
-func TestBitcoinConvertURLUsedInProgram(t *testing.T) {
+func TestBitcoinConvertCriptonator(t *testing.T) {
 	t.Parallel()
 	//Arrange
-	var btsConvertor bitcoin.Convertor = bitcoin.Conversion{}
+	var btsConvertor bitcoin.Convertor = bitcoin.ConversionCryptonator{}
 	//Act
-	btsRate, err := btsConvertor.ToUAH("https://api.cryptonator.com/api/ticker/btc-uah")
+	btsRate, err := btsConvertor.ToUAH()
 	//Assert
 	require.Nil(t, err)
 	require.Greater(t, btsRate, 0.0)
-}
-
-func TestBitcoinConvertWrongURL(t *testing.T) {
-	t.Parallel()
-	//Arrange
-	var btsConvertor bitcoin.Convertor = bitcoin.Conversion{}
-	//Act
-	btsRate, err := btsConvertor.ToUAH("wrongUrl")
-	//Assert
-	require.Error(t, err)
-	require.Equal(t, -1.0, btsRate)
 }

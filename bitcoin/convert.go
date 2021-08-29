@@ -6,7 +6,10 @@ import (
 )
 
 type Convertor interface {
-	ToUAH(btsResource string) (float64, error)
+	ToUAH() (float64, error)
+}
+
+type ConversionCryptonator struct {
 }
 
 type BTS struct {
@@ -15,11 +18,8 @@ type BTS struct {
 	} `json:"ticker"`
 }
 
-type Conversion struct {
-}
-
-func (Conversion) ToUAH(btsResource string) (float64, error) {
-	r, err := http.Get(btsResource)
+func (ConversionCryptonator) ToUAH() (float64, error) {
+	r, err := http.Get("https://api.cryptonator.com/api/ticker/btc-uah")
 	if err != nil {
 		return -1, err
 	}
