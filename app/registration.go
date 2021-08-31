@@ -1,78 +1,58 @@
 package app
 
 import (
-	. "WebApiGenesis/model"
-	. "WebApiGenesis/services"
+	"WebApiGenesis/model"
+	"WebApiGenesis/services"
 	"html/template"
 	"log"
 	"net/http"
-	"net/mail"
 )
 
-func RegistrationHandler(response http.ResponseWriter, request *http.Request) {
+type Registration struct {
+	RegService services.Registrar
+}
 
+func (reg Registration) RegistrationHandler(response http.ResponseWriter, request *http.Request) {
 	if request.Method == "POST" {
-		postRegistrationLogic(response, request)
+		postRegistrationLogic(response, request, reg)
 	}
 	if request.Method == "GET" {
 		tmpl, _ := template.ParseFiles("../WebApiGenesis/html/registration.html")
-		tmpl.Execute(response,  ViewData{""})
+		tmpl.Execute(response, ViewData{""})
 	}
 }
 
-func postRegistrationLogic(response http.ResponseWriter, request *http.Request)  {
+func postRegistrationLogic(response http.ResponseWriter, request *http.Request, reg Registration) {
 	err := request.ParseForm()
 	if err != nil {
 		log.Println(err)
 	}
 	if request.FormValue("signUp") == "Sign up" {
-		singUpLogic(response, request)
+		singUpLogic(response, request, reg)
 	} else if request.FormValue("goToSignIn") == "Go to sign in" {
-		http.ServeFile(response, request, "../WebApiGenesis/html/authentication.html")
-		return
+		http.Redirect(response, request, "/user/login", 301)
 	}
 }
 
-func singUpLogic(response http.ResponseWriter, request *http.Request)  {
-	var viewData ViewData = ViewData{""}
-	var registrationUser RegistrationUser = createRegistrationUser(request)
-	if valid, message := trySignUp(registrationUser); !valid {
-		viewData = ViewData{message}
-	} else {
+func singUpLogic(response http.ResponseWriter, request *http.Request, reg Registration) {
+	var registrationUser model.RegistrationUser = createRegistrationUser(request)
+	message, err := reg.RegService.Register(registrationUser)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	var viewData ViewData = ViewData{message}
+	if viewData.Message == "" {
 		http.Redirect(response, request, "/user/login", 301)
 	}
 	tmpl, _ := template.ParseFiles("../WebApiGenesis/html/registration.html")
 	tmpl.Execute(response, viewData)
 }
 
-func createRegistrationUser(request *http.Request) RegistrationUser {
-	var registrationUser RegistrationUser
+func createRegistrationUser(request *http.Request) model.RegistrationUser {
+	var registrationUser model.RegistrationUser
 	registrationUser.Email = request.FormValue("email")
 	registrationUser.Password = request.FormValue("password")
 	registrationUser.ConfirmPassword = request.FormValue("confirmPassword")
 	return registrationUser
-}
-
-func trySignUp(registrationUser RegistrationUser) (bool, string) {
-	if registrationUser.Email == "" || registrationUser.Password == "" || registrationUser.ConfirmPassword == "" {
-		return false, "Email, password and confirm password must be set"
-	}
-	if validEmail(registrationUser.Email) {
-		return false, "Email is wrong"
-	}
-	if len(registrationUser.Password) < 6 {
-		return false, "Password must be longer than 6"
-	}
-	if registrationUser.Password != registrationUser.ConfirmPassword {
-		return false, "Confirm password and password can`t be different"
-	}
-	if !Registration(registrationUser) {
-		return false, "This user has not registered yet"
-	}
-	return true, ""
-}
-
-func validEmail(email string) bool {
-	_, err := mail.ParseAddress(email)
-	return err != nil
 }

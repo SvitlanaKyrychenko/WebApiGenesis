@@ -1,0 +1,31 @@
+package bitcoin
+
+import (
+	"encoding/json"
+	"net/http"
+)
+
+type Convertor interface {
+	ToUAH() (float64, error)
+}
+
+type ConversionCryptonator struct {
+}
+
+type BTS struct {
+	Ticker struct {
+		Price float64 `json:"price,string"`
+	} `json:"ticker"`
+}
+
+func (ConversionCryptonator) ToUAH() (float64, error) {
+	r, err := http.Get("https://api.cryptonator.com/api/ticker/btc-uah")
+	if err != nil {
+		return -1, err
+	}
+	var data BTS
+	if err = json.NewDecoder(r.Body).Decode(&data); err != nil {
+		return -1, err
+	}
+	return data.Ticker.Price, nil
+}
