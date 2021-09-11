@@ -1,7 +1,8 @@
 package mock
 
 import (
-	"WebApiGenesis/model"
+	model2 "WebApiGenesis/BitcoinRateService/model"
+	"WebApiGenesis/CustomerService/model"
 	"github.com/segmentio/ksuid"
 	"sync"
 )
@@ -13,7 +14,7 @@ type VirtualStorage struct {
 
 type Storage struct {
 	virtualStorage VirtualStorage
-	Convertor      model.Convertor
+	Convertor      model2.Convertor
 }
 
 func (storage *Storage) Init() {

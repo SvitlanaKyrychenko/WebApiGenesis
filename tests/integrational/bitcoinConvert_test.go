@@ -1,7 +1,7 @@
 package integrational
 
 import (
-	"WebApiGenesis/bitcoin"
+	"WebApiGenesis/BitcoinRateService/bitcoin"
 	"github.com/stretchr/testify/require"
 	"testing"
 )

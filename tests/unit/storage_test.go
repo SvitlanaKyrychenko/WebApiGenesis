@@ -1,11 +1,11 @@
 package unit
 
 import (
-	"WebApiGenesis/model"
-	"WebApiGenesis/storage"
+	"WebApiGenesis/CustomerService/model"
+	"WebApiGenesis/CustomerService/storage"
+	"WebApiGenesis/CustomerService/utils/file"
 	"WebApiGenesis/tests/mock"
 	"WebApiGenesis/tests/util"
-	"WebApiGenesis/utils/file"
 	"encoding/json"
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"

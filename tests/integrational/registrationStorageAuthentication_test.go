@@ -1,9 +1,9 @@
 package integrational
 
 import (
-	"WebApiGenesis/model"
-	"WebApiGenesis/services"
-	"WebApiGenesis/storage"
+	"WebApiGenesis/CustomerService/server"
+	"WebApiGenesis/CustomerService/storage"
+	"WebApiGenesis/GRPCMessage/model"
 	"WebApiGenesis/tests/util"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -17,8 +17,8 @@ func TestValidRegistrationAuthenticationStored(t *testing.T) {
 	var authenticationUser model.AuthenticationUser = model.AuthenticationUser{Email: "email@gmail.com",
 		Password: "GreatPassword1"}
 	var storage storage.Storage = util.PrepareStorage()
-	var regService services.Registrar = services.Registration{Storage: storage}
-	var authService services.Authenticator = services.Authentication{Storage: storage}
+	var regService server.Registrar = server.Registration{Storage: storage}
+	var authService server.Authenticator = server.AuthenticationServer{Storage: storage}
 	defer util.DeleteDBUser(registrationUser, storage)
 	//Act
 	messageRegistration, errRegistration := regService.Register(registrationUser)
@@ -38,8 +38,8 @@ func TestDifferentRegistrationUserAndAuthenticationUserStored(t *testing.T) {
 	var authenticationUser model.AuthenticationUser = model.AuthenticationUser{Email: "email@gmail.com",
 		Password: "WrongGreatPassword1"}
 	var storage storage.Storage = util.PrepareStorage()
-	var regService services.Registrar = services.Registration{Storage: storage}
-	var authService services.Authenticator = services.Authentication{Storage: storage}
+	var regService server.Registrar = server.Registration{Storage: storage}
+	var authService server.Authenticator = server.AuthenticationServer{Storage: storage}
 	defer util.DeleteDBUser(registrationUser, storage)
 	//Act
 	messageRegistration, errRegistration := regService.Register(registrationUser)

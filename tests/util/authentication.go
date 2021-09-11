@@ -1,9 +1,10 @@
 package util
 
 import (
-	"WebApiGenesis/model"
-	"WebApiGenesis/services"
-	"WebApiGenesis/storage"
+	model2 "WebApiGenesis/CustomerService/model"
+	"WebApiGenesis/CustomerService/server"
+	"WebApiGenesis/CustomerService/storage"
+	"WebApiGenesis/GRPCMessage/model"
 	"github.com/segmentio/ksuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,11 +18,11 @@ func AddUserToStorageMock(authenticationUser model.AuthenticationUser, storage *
 	if err != nil {
 		return
 	}
-	var userDB model.DBUser = model.DBUser{Email: authenticationUser.Email, Password: string(hashedPassword), Guid: guid}
+	var userDB model2.DBUser = model2.DBUser{Email: authenticationUser.Email, Password: string(hashedPassword), Guid: guid}
 	(*storage).AddOrUpdateAsync(userDB)
 }
 
-func PrepareAuthService() services.Authenticator {
+func PrepareAuthService() server.Authenticator {
 	var storage storage.Storage = PrepareMockStorage()
-	return services.Authentication{Storage: storage}
+	return server.AuthenticationServer{Storage: storage}
 }

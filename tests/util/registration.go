@@ -1,11 +1,11 @@
 package util
 
 import (
-	"WebApiGenesis/services"
-	"WebApiGenesis/storage"
+	"WebApiGenesis/CustomerService/server"
+	"WebApiGenesis/CustomerService/storage"
 )
 
-func PrepareRegService() services.Registrar {
+func PrepareRegService() server.Registrar {
 	var storage storage.Storage = PrepareMockStorage()
-	return services.Registration{Storage: storage}
+	return server.Registration{Storage: storage}
 }

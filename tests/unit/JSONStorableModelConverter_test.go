@@ -1,7 +1,8 @@
 package unit
 
 import (
-	"WebApiGenesis/model"
+	model2 "WebApiGenesis/BitcoinRateService/model"
+	"WebApiGenesis/CustomerService/model"
 	"WebApiGenesis/tests/mock"
 	"encoding/json"
 	"github.com/stretchr/testify/require"
@@ -10,7 +11,7 @@ import (
 
 func TestValidStorableModelJSONConverter(t *testing.T) {
 	//Arrange
-	var convertor model.Convertor = model.JSONGConvertor{}
+	var convertor model2.Convertor = model2.JSONGConvertor{}
 	var mockClass model.Storable = prepareMockClass("class")
 	//Act
 	classByte, errConvert := convertor.ConvertByte(mockClass)

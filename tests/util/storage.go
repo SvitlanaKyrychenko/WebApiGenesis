@@ -1,10 +1,12 @@
 package util
 
 import (
-	"WebApiGenesis/model"
-	"WebApiGenesis/storage"
+	model2 "WebApiGenesis/BitcoinRateService/model"
+	model3 "WebApiGenesis/CustomerService/model"
+	"WebApiGenesis/CustomerService/storage"
+	"WebApiGenesis/CustomerService/utils/file"
+	"WebApiGenesis/GRPCMessage/model"
 	"WebApiGenesis/tests/mock"
-	"WebApiGenesis/utils/file"
 	"encoding/json"
 	"github.com/segmentio/ksuid"
 	"golang.org/x/crypto/bcrypt"
@@ -12,11 +14,11 @@ import (
 )
 
 func PrepareStorage() storage.Storage {
-	var convertor model.Convertor = model.JSONGConvertor{}
+	var convertor model2.Convertor = model2.JSONGConvertor{}
 	return storage.FileStorage{Convertor: convertor}
 }
 
-func PrepareMockClass(message string) model.Storable {
+func PrepareMockClass(message string) model3.Storable {
 	guid, err := ksuid.NewRandom()
 	if err != nil {
 		return nil
@@ -24,7 +26,7 @@ func PrepareMockClass(message string) model.Storable {
 	return mock.StorableClass{Guid: guid, Message: message}
 }
 
-func DeleteClass(class model.Storable) {
+func DeleteClass(class model3.Storable) {
 	src, err := GetClassPath(class)
 	if err == nil {
 		file.DeleteFile(src)
@@ -32,7 +34,7 @@ func DeleteClass(class model.Storable) {
 }
 
 func DeleteDBUser(registrationUser model.RegistrationUser, storage storage.Storage) {
-	var needUser model.DBUser = model.DBUser{}
+	var needUser model3.DBUser = model3.DBUser{}
 	usersByte, err := storage.GetALLAsync(needUser)
 	if err != nil {
 		return
@@ -49,7 +51,7 @@ func DeleteDBUser(registrationUser model.RegistrationUser, storage storage.Stora
 	}
 }
 
-func GetClassPath(class model.Storable) (string, error) {
+func GetClassPath(class model3.Storable) (string, error) {
 	src, err := storage.GetDir(class)
 	if err == nil {
 		return filepath.Join(src, class.GetGuid().String()), nil
@@ -58,7 +60,7 @@ func GetClassPath(class model.Storable) (string, error) {
 }
 
 func PrepareMockStorage() storage.Storage {
-	var convertor model.Convertor = model.JSONGConvertor{}
+	var convertor model2.Convertor = model2.JSONGConvertor{}
 	var mockStorage = mock.Storage{Convertor: convertor}
 	mockStorage.Init()
 	return mockStorage
