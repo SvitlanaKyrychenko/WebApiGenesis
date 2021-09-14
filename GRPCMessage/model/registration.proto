@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "WebApiGenesis/GRPCMessage/model";
+package model;
+
+service Registrar {
+  rpc Register(RegistrationUser) returns(RegistrationResponse);
+}
+
+message RegistrationUser {
+  string email = 1;
+  string password = 2;
+  string confirmPassword = 3;
+}
+
+message RegistrationResponse {
+  string message = 1;
+}

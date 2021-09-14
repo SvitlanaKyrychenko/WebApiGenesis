@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "WebApiGenesis/GRPCMessage/model";
+package model;
+
+service Authenticator {
+    rpc Authenticate(AuthenticationUser) returns(AuthenticationResponse);
+}
+
+message AuthenticationUser {
+string email = 1;
+string password = 2;
+}
+
+message AuthenticationResponse {
+  string message = 1;
+}
+

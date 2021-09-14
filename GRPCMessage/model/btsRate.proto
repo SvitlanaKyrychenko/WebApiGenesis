@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "WebApiGenesis/GRPCMessage/model";
+package model;
+
+service Convertor {
+  rpc ToUAH(BtsRateInput) returns(BtsRateResponse);
+}
+
+message BtsRateInput {
+}
+
+message BtsRateResponse {
+  float rate = 1;
+}
