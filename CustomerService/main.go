@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	portAuth = flag.Int("portAuth", 10003, "The server portAuth")
-	portReg  = flag.Int("portReg", 10004, "The server portReg")
+	portAuth = flag.Int("portAuth", 10006, "The server portAuth")
+	portReg  = flag.Int("portReg", 10007, "The server portReg")
 )
 
 func main() {

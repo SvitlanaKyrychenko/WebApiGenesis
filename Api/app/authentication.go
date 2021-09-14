@@ -5,7 +5,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"google.golang.org/grpc"
+	grpc "google.golang.org/grpc"
 	"html/template"
 	"log"
 	"net/http"

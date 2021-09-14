@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	serverAddrAuth    = flag.String("server_addr_auth", "localhost:10003", "The server address in the format of host:port")
-	serverAddrReg     = flag.String("server_addr_reg", "localhost:10004", "The server address in the format of host:port")
+	serverAddrAuth    = flag.String("server_addr_auth", "localhost:10006", "The server address in the format of host:port")
+	serverAddrReg     = flag.String("server_addr_reg", "localhost:10007", "The server address in the format of host:port")
 	serverAddrBtsRate = flag.String("server_addr_bts_rate", "localhost:10005", "The server address in the format of host:port")
 )
 
