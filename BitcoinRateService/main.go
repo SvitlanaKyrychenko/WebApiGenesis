@@ -1,8 +1,8 @@
 package main
 
 import (
-	"WebApiGenesis/BitcoinRateService/bitcoin"
-	grpcModel "WebApiGenesis/GRPCMessage/model"
+	"Bitcoin/BitcoinRateService/bitcoin"
+	grpcModel "Bitcoin/GRPCMessage"
 	"flag"
 	"fmt"
 	"google.golang.org/grpc"

@@ -4,7 +4,7 @@
 // 	protoc        v3.17.3
 // source: model/authentication.proto
 
-package model
+package GRPCMessage
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

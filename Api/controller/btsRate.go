@@ -1,7 +1,7 @@
-package app
+package controller
 
 import (
-	grpcModel "WebApiGenesis/GRPCMessage/model"
+	grpcModel "Bitcoin/GRPCMessage"
 	"context"
 	"flag"
 	"fmt"

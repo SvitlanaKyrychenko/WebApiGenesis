@@ -1,7 +1,7 @@
 package main
 
 import (
-	"WebApiGenesis/Api/app"
+	"Bitcoin/Api/controller"
 	"flag"
 	"fmt"
 	"net/http"
@@ -15,9 +15,9 @@ var (
 
 func main() {
 	//prepare
-	var authentication app.Authentication = app.Authentication{AuthServer: serverAddrAuth}
-	var registration app.Registration = app.Registration{RegServer: serverAddrReg}
-	var btsRate app.BtsRate = app.BtsRate{BtsRateServer: serverAddrBtsRate}
+	var authentication controller.Authentication = controller.Authentication{AuthServer: serverAddrAuth}
+	var registration controller.Registration = controller.Registration{RegServer: serverAddrReg}
+	var btsRate controller.BtsRate = controller.BtsRate{BtsRateServer: serverAddrBtsRate}
 
 	http.HandleFunc("/user/login", authentication.AuthenticationHandler)
 	http.HandleFunc("/btsRate", btsRate.BTSRateHandler)

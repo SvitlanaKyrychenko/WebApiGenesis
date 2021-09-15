@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"WebApiGenesis/CustomerService/model"
-	"WebApiGenesis/CustomerService/utils/file"
+	"Bitcoin/CustomerService/model"
+	"Bitcoin/CustomerService/utils/file"
 	"errors"
 	"fmt"
 	"github.com/segmentio/ksuid"

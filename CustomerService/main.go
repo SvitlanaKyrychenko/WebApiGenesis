@@ -1,10 +1,10 @@
 package main
 
 import (
-	"WebApiGenesis/CustomerService/model"
-	"WebApiGenesis/CustomerService/server"
-	"WebApiGenesis/CustomerService/storage"
-	grpcModel "WebApiGenesis/GRPCMessage/model"
+	"Bitcoin/CustomerService/model"
+	"Bitcoin/CustomerService/server"
+	"Bitcoin/CustomerService/storage"
+	grpcModel "Bitcoin/GRPCMessage"
 	"flag"
 	"fmt"
 	"google.golang.org/grpc"

@@ -1,7 +1,7 @@
-package app
+package controller
 
 import (
-	grpcModel "WebApiGenesis/GRPCMessage/model"
+	grpcModel "Bitcoin/GRPCMessage"
 	"context"
 	"flag"
 	"fmt"
@@ -24,7 +24,7 @@ func (auth Authentication) AuthenticationHandler(response http.ResponseWriter, r
 		postAuthenticationLogic(response, request, auth.AuthServer)
 	}
 	if request.Method == "GET" {
-		tmpl, _ := template.ParseFiles("../WebApiGenesis/html/authentication.html")
+		tmpl, _ := template.ParseFiles("../WebApiGenesis/Api/html/authentication.html")
 		tmpl.Execute(response, ViewData{""})
 	}
 }
@@ -53,7 +53,7 @@ func signInLogic(response http.ResponseWriter, request *http.Request, authServer
 	if viewData.Message == "" {
 		http.Redirect(response, request, "/btsRate", 301)
 	}
-	tmpl, _ := template.ParseFiles("../WebApiGenesis/html/authentication.html")
+	tmpl, _ := template.ParseFiles("../WebApiGenesis/Api/html/authentication.html")
 	tmpl.Execute(response, viewData)
 }
 

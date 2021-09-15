@@ -1,7 +1,7 @@
 package bitcoin
 
 import (
-	grpcModel "WebApiGenesis/GRPCMessage/model"
+	grpcModel "Bitcoin/GRPCMessage"
 	"context"
 	"encoding/json"
 	"net/http"

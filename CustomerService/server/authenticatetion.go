@@ -1,9 +1,9 @@
 package server
 
 import (
-	"WebApiGenesis/CustomerService/model"
-	"WebApiGenesis/CustomerService/storage"
-	grpcModel "WebApiGenesis/GRPCMessage/model"
+	"Bitcoin/CustomerService/model"
+	"Bitcoin/CustomerService/storage"
+	grpcModel "Bitcoin/GRPCMessage"
 	"context"
 	"encoding/json"
 	"errors"
